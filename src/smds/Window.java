@@ -1120,17 +1120,10 @@ public class Window extends JFrame {
 									exists = true;
 									z = check_list.size();
 								}
-							}	
+							}
 							if(!exists) {
-								ArrayList<JsonNodeWrapper> p = part.getProblems();
-								boolean found = false;
-								for(int z = 0; z < p.size(); z++)
-									if(p.get(z).getJsonNode().toString().equals(rel.getJsonNode().toString())) {
-										found = true;
-										z = p.size();
-									}
-								if(found) { // check if one of the selected symptoms
-									boolean exists2 = false;
+								if(getBroadestID(rn, rel.getJsonNode()).equals("https://infoneer.poolparty.biz/MaintenanceDiagnosisThesaurus/1")) { // check if related concept is a problem (as opposed to say another part)
+									boolean exists2 = false; // check if not one of the selected symptoms
 									for(int a = 0; a < symptoms.size(); a++) {
 										if(symptoms.get(a).getJsonNode().toString().equals(rel.getJsonNode().toString())) {
 											exists2 = true;
@@ -1166,15 +1159,7 @@ public class Window extends JFrame {
 										}
 									}
 									if(!exists) {
-										ArrayList<JsonNodeWrapper> t = part.getTreatments();
-										boolean found = false;
-										for(int z = 0; z < t.size(); z++) {
-											if(t.get(z).getJsonNode().toString().equals(rel.getJsonNode().toString())) {
-												found = true;
-												z = t.size();
-											}
-										}
-										if(found) {
+										if(getBroadestID(rn, rel.getJsonNode()).equals("https://infoneer.poolparty.biz/MaintenanceDiagnosisThesaurus/25")) {
 											String definition = "";
 											if(rel.getJsonNode().get("http://www.w3.org/2004/02/skos/core#definition") != null)
 												definition = rel.getJsonNode().get("http://www.w3.org/2004/02/skos/core#definition").get(0).get("value").asText();
@@ -1468,7 +1453,7 @@ public class Window extends JFrame {
 				if(one_check) {
 					ArrayList<Object[]> treatments_table = new ArrayList<Object[]>();
 					for(int r = 0; r < check_list.size(); r++) {
-						if(check_list.get(r).getJsonNodeWrapper().getJsonNode().get("http://www.w3.org/2004/02/skos/core#related") != null) {
+						if(check_list.get(r).getJsonNodeWrapper().getJsonNode().get("http://www.w3.org/2004/02/skos/core#related") != null && check_list.get(r).isSelected()) {
 							ArrayList<String> added_treatments = new ArrayList<String>();
 							for(int y = 0; y < check_list.get(r).getJsonNodeWrapper().getJsonNode().get("http://www.w3.org/2004/02/skos/core#related").size(); y++) {
 								JsonNodeWrapper rel = new JsonNodeWrapper(rn.get(check_list.get(r).getJsonNodeWrapper().getJsonNode().get("http://www.w3.org/2004/02/skos/core#related").get(y).get("value").asText()));
@@ -1480,15 +1465,7 @@ public class Window extends JFrame {
 									}
 								}
 								if(!exists) {
-									ArrayList<JsonNodeWrapper> t = part.getTreatments();
-									boolean found = false;
-									for(int z = 0; z < t.size(); z++) {
-										if(t.get(z).getJsonNode().toString().equals(rel.getJsonNode().toString())) {
-											found = true;
-											z = t.size();
-										}
-									}
-									if(found) {
+									if(getBroadestID(rn, rel.getJsonNode()).equals("https://infoneer.poolparty.biz/MaintenanceDiagnosisThesaurus/25")) {
 										String definition = "";
 										if(rel.getJsonNode().get("http://www.w3.org/2004/02/skos/core#definition") != null)
 											definition = rel.getJsonNode().get("http://www.w3.org/2004/02/skos/core#definition").get(0).get("value").asText();
